@@ -18,14 +18,16 @@ interface CountdownProviderProps {
 
 let countdownTimeout: NodeJS.Timeout;
 
+const countDownInitialTime = 0.1;
+
 export function CountDownProvider({ children }: CountdownProviderProps) {
     const { startNewChallenge } = useContext(ChallengesContext);
 
-    const [time, setTime] = useState(25 * 60)
+    const [time, setTime] = useState(countDownInitialTime * 60)
     const [isActive, setIsActive] = useState(false);
     const [hasFinished, setHasFinished] = useState(false);
 
-    const minutes = Math.floor(time / 60);
+    const minutes = Math.floor(countDownInitialTime / 60);
     const seconds = time % 60;
 
     function startCountdown() {

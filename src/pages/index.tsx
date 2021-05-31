@@ -9,8 +9,10 @@ import styles from '../styles/pages/Home.module.css';
 import { ChallengeBox } from '../components/ChallengeBox';
 import { CountDownProvider } from '../contexts/CountdownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
+import Login from './login';
 
 interface HomeProps {
+  userLogin: string;
   level: number;
   currentExperience: number;
   challengesCompleted: number;
@@ -18,32 +20,38 @@ interface HomeProps {
 
 export default function Home(props: HomeProps) {
   return (
-    <ChallengesProvider
-      level={props.level}
-      currentExperience={props.currentExperience}
-      challengesCompleted={props.challengesCompleted}
-    >
-      <div className={styles.container}>
-        <Head>
-          <title>Início | move.it</title>
-        </Head>
+    <div>
+      {props.userLogin ? (
+        <ChallengesProvider
+          level={props.level}
+          currentExperience={props.currentExperience}
+          challengesCompleted={props.challengesCompleted}
+        >
+          <div className={styles.container}>
+            <Head>
+              <title>Início | move.it</title>
+            </Head>
 
-        <ExperienceBar />
+            <ExperienceBar />
 
-        <CountDownProvider>
-          <section>
-            <div>
-              <Profile />
-              <CompletedChallenges />
-              <Countdown />
-            </div>
-            <div>
-              <ChallengeBox />
-            </div>
-          </section>
-        </CountDownProvider>
-      </div>
-    </ChallengesProvider >
+            <CountDownProvider>
+              <section>
+                <div>
+                  <Profile />
+                  <CompletedChallenges />
+                  <Countdown />
+                </div>
+                <div>
+                  <ChallengeBox />
+                </div>
+              </section>
+            </CountDownProvider>
+          </div>
+        </ChallengesProvider >
+      ) : (
+          <Login />
+        )}
+    </div>
   )
 }
 
@@ -51,10 +59,11 @@ export default function Home(props: HomeProps) {
    antes de levar a resposta com o conteúdo ao Browser */
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
+  const { userLogin, level, currentExperience, challengesCompleted } = ctx.req.cookies;
 
   return {
     props: {
+      userLogin: userLogin,
       level: Number(level),
       currentExperience: Number(currentExperience),
       challengesCompleted: Number(challengesCompleted)
